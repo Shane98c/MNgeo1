@@ -18,6 +18,13 @@ angular.module('starter.controllers', [])
         url: "http://arcgis.dnr.state.mn.us/arcgis/rest/services/elevation/mn_hillshade_web_mercator/MapServer"
       }).addTo(map);
 
+      L.esri.tiledMapLayer({
+          url: "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer"
+        }).addTo(map);
+
+      L.esri.tiledMapLayer({
+          url: "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer"
+        }).addTo(map);
     // L.tileLayer('http://arcgis.dnr.state.mn.us/arcgis/rest/services/elevation/mn_hillshade_web_mercator/MapServer/tile/{z}/{y}/{x}', {
     // }).addTo(map);
 
