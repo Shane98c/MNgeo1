@@ -1,19 +1,9 @@
 angular.module('starter.controllers', [])
 
-.controller('MapCtrl', function($scope) {
+.controller('MapCtrl', function($scope, $http) {
 
-  // var crs = new L.Proj.CRS('EPSG:54009', '+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs', {
-  //     origin: [-19844104.7157449, 29766157.3486128],
-  //     resolutions: [
-  //       66145.9656252646,
-  //       33072.9828126323,
-  //       16933.3672000677,
-  //       8466.68360003387
-  //     ]
-  //   });
-
-    var map = L.map('mapid').setView([ 44.9, -93.26], 7);
-
+    var map = L.map('mapid').setView([ 44.9, -93.26], 8);
+    map.locate({setView: true, maxZoom: 16});
     L.esri.tiledMapLayer({
         url: "http://arcgis.dnr.state.mn.us/arcgis/rest/services/elevation/mn_hillshade_web_mercator/MapServer"
       }).addTo(map);
@@ -25,10 +15,44 @@ angular.module('starter.controllers', [])
       L.esri.tiledMapLayer({
           url: "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer"
         }).addTo(map);
-    // L.tileLayer('http://arcgis.dnr.state.mn.us/arcgis/rest/services/elevation/mn_hillshade_web_mercator/MapServer/tile/{z}/{y}/{x}', {
-    // }).addTo(map);
 
-  // var mymap = L.map('mapid',{crs: L.CRS.EPSG4326}).setView([44.98, -93.23], 10);
-  //   L.tileLayer('http://arcgis.dnr.state.mn.us/arcgis/rest/services/elevation/mn_hillshade_web_mercator/MapServer/tile/{z}/{y}/{x}', {
-  //   }).addTo(mymap);
+      function onLocationFound(e) {
+        var radius = e.accuracy / 2;
+        L.circle(e.latlng, radius).addTo(map);
+      }
+      map.on('locationfound', onLocationFound);
+
+      function onMapClick(e) {
+        console.log("You clicked the map at " + e.latlng.lat);
+        getUnder(e);
+      }
+      map.on('click', onMapClick);
+
+      function getJSONP(url, success) {
+        script.src = url.replace('callback=?', 'callback=' + ud);
+        head.appendChild(script);
+      }
+
+      function getUnder(e) {
+        $scope.under = {};
+        var url =  ['http://maps2.dnr.state.mn.us/cgi-bin/mapserv64?map=WUYH_MAPFILE&mode=nquery&qformat=json&mapxy=',e.latlng.lng, '+', e.latlng.lat].join('');
+        console.log(url);
+
+        $http({
+          url: url,
+          method: 'GET',
+        }).success (function(data){
+          $scope.under = data.result;
+          printUnder();
+        })
+      }
+
+    function printUnder() {
+      var geology = $scope.under.geology;
+      console.log(geology);
+    }
+//http://maps2.dnr.state.mn.us/cgi-bin/mapserv64?map=WUYH_MAPFILE&mode=nquery&qformat=jsonp&callback=foo&mapxy=-93.172773+44.979207&_=1476979774398
+
+      //get DNR data for point
+      //http://maps2.dnr.state.mn.us/cgi-bin/mapserv64?map=WUYH_MAPFILE&mode=nquery&qformat=jsonp&callback=foo&mapxy=e.latlng.lat+e.latlng.lat
 })
