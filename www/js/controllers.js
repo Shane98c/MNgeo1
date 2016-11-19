@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [ 'ion-BottomSheet'])
 
-.controller('MapCtrl', function($scope, $http, $bottomSheet, $state) {
+.controller('MapCtrl', function($scope, $http, $state) {
 
     var map = L.map('mapid').setView([ 44.9, -93.26], 8);
     map.locate({setView: true, maxZoom: 16});
@@ -50,11 +50,4 @@ angular.module('starter.controllers', [ 'ion-BottomSheet'])
       //   buttons: ['ROCKS', 'test']
       // });
     }
-})
-
-.controller('UnderCtrl', function($scope, $http, $bottomSheet, $state) {
- $scope.geo = {
-   "geology": 'dog'
- }
- console.log(geo);
 })
