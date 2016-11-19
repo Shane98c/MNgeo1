@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [ 'ion-BottomSheet'])
+angular.module('starter.controllers', [])
 
 .controller('MapCtrl', function($scope, $http, $state) {
 
