@@ -1,11 +1,11 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', [ 'ion-BottomSheet'])
 
-.controller('MapCtrl', function($scope, $http) {
+.controller('MapCtrl', function($scope, $http, $bottomSheet, $state) {
 
     var map = L.map('mapid').setView([ 44.9, -93.26], 8);
     map.locate({setView: true, maxZoom: 16});
     L.esri.tiledMapLayer({
-        url: "http://arcgis.dnr.state.mn.us/arcgis/rest/services/elevation/mn_hillshade_web_mercator/MapServer"
+        url: "https://arcgis.dnr.state.mn.us/arcgis/rest/services/elevation/mn_hillshade_web_mercator/MapServer"
       }).addTo(map);
 
       L.esri.tiledMapLayer({
@@ -28,11 +28,6 @@ angular.module('starter.controllers', [])
       }
       map.on('click', onMapClick);
 
-      function getJSONP(url, success) {
-        script.src = url.replace('callback=?', 'callback=' + ud);
-        head.appendChild(script);
-      }
-
       function getUnder(e) {
         $scope.under = {};
         var url =  ['http://maps2.dnr.state.mn.us/cgi-bin/mapserv64?map=WUYH_MAPFILE&mode=nquery&qformat=json&mapxy=',e.latlng.lng, '+', e.latlng.lat].join('');
@@ -50,9 +45,16 @@ angular.module('starter.controllers', [])
     function printUnder() {
       var geology = $scope.under.geology;
       console.log(geology);
+      // $state.go("tab-under");
+      // $bottomSheet.show({
+      //   buttons: ['ROCKS', 'test']
+      // });
     }
-//http://maps2.dnr.state.mn.us/cgi-bin/mapserv64?map=WUYH_MAPFILE&mode=nquery&qformat=jsonp&callback=foo&mapxy=-93.172773+44.979207&_=1476979774398
+})
 
-      //get DNR data for point
-      //http://maps2.dnr.state.mn.us/cgi-bin/mapserv64?map=WUYH_MAPFILE&mode=nquery&qformat=jsonp&callback=foo&mapxy=e.latlng.lat+e.latlng.lat
+.controller('UnderCtrl', function($scope, $http, $bottomSheet, $state) {
+ $scope.geo = {
+   "geology": 'dog'
+ }
+ console.log(geo);
 })
